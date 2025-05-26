@@ -7,7 +7,7 @@ def main():
 
     # Use button to trigger page switch
     if st.button('Go to Overview'):
-        st.switch_page('pages/1 Overview.py')
+        st.switch_page("1 Overview")
 
 if __name__ == "__main__":
     main()
