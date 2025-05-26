@@ -11,4 +11,4 @@ It includes:
 ## Run the dashboard
 
 ```bash
-streamlit run dashboard.py
+streamlit run main.py
