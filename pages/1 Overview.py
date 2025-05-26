@@ -220,7 +220,7 @@ with col3:
          st.markdown("""
     <style>
     .about-box {
-        font-size: 9px;
+        font-size: 13px;
         line-height: 1.4;
         max-width: 340px;
         max-height: 250px;
