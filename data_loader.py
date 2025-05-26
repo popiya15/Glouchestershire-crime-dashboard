@@ -3,7 +3,7 @@ import glob
 import re
 
 def load_and_clean_data():
-    base_folder = r"C:/Users/Mick/Desktop/Master degree UEA/SEM2/Crime data"
+    base_folder = "data"
     files = glob.glob(base_folder + "/**/*.csv", recursive=True)
     df = pd.concat([pd.read_csv(f) for f in files], ignore_index=True)
     df.columns = df.columns.str.strip().str.lower()

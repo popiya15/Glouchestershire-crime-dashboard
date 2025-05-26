@@ -11,7 +11,7 @@ df['date'] = pd.to_datetime(df['month_parsed'])
 
 @st.cache_data
 def load_census_data():
-    census_path = r"C:/Users/Mick/Desktop/Master degree UEA/SEM2/Advance analytics/ONS Census data/Summary census data.csv"
+    census_path = "data/summary_census_data.csv"
     df = pd.read_csv(census_path)
     df.columns = df.columns.str.strip()
     df['Date'] = pd.to_datetime(df['Date'], format="%d-%m-%y", dayfirst=True)
@@ -56,7 +56,7 @@ else:
 
 # Load filtered GeoJSON
 def load_gloucestershire_geojson():
-    geojson_path = r"C:/Users/Mick/Desktop/Master degree UEA/SEM2/Advance analytics/lad.json"
+    geojson_path = "data/lad.json"
     with open(geojson_path) as f:
         uk_geojson = json.load(f)
     gloucestershire_districts = ["Cheltenham", "Cotswold", "Forest of Dean", "Gloucester", "Stroud", "Tewkesbury"]
