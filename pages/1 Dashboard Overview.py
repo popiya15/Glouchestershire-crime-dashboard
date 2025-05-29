@@ -26,7 +26,16 @@ def load_census_data():
 
 census_df = load_census_data()
 
-# Sidebar filter
+# Sidebar filters
+
+map_districts = ["Cheltenham", "Cotswold", "Forest of Dean", "Gloucester", "Stroud", "Tewkesbury"]
+city_options = sorted([d for d in map_districts if d in df["city"].unique()])
+selected_city = st.sidebar.selectbox("Select Specific City:", ["All"] + city_options)
+
+# Apply city filter
+if selected_city != "All":
+    df = df[df["city"] == selected_city]
+    
 crime_types = df["crime type"].dropna().unique()
 selected_crime = st.sidebar.multiselect("Filter Crime Type:", sorted(crime_types), default=list(crime_types))
 
@@ -38,6 +47,7 @@ with col_date1:
 with col_date2:
     end_date = st.date_input("End Date", value=df['date'].max())
 
+# Final filtered dataset
 filtered_df = df[
     (df["crime type"].isin(selected_crime)) &
     (df["date"] >= pd.to_datetime(start_date)) &
@@ -72,11 +82,11 @@ def load_geojson():
 
 geojson = load_geojson()
 
+# Choropleth data
 district_crime_data = filtered_df['city'].value_counts().reset_index()
 district_crime_data.columns = ['District', 'Crime Count']
 min_crime, max_crime = district_crime_data['Crime Count'].min(), district_crime_data['Crime Count'].max()
 
-# Choropleth map
 fig_map = px.choropleth(
     district_crime_data,
     geojson=geojson,
@@ -105,7 +115,7 @@ def create_donut_chart(value, label, color, compare_val=None):
     fig.update_layout(showlegend=False, margin=dict(t=0, b=0, l=0, r=0), annotations=annotations, width=220, height=220, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
     return fig
 
-# Timeline (line chart)
+# Line chart
 timeline = filtered_df.groupby(filtered_df['date'].dt.to_period('M')).size().reset_index(name='Crime Count')
 timeline['date'] = timeline['date'].dt.to_timestamp()
 
@@ -120,18 +130,14 @@ fig_line = px.line(
     title='Crime Over Time', 
     markers=True
 )
-
 fig_line.update_xaxes(range=[timeline['date'].min(), timeline['date'].max()], rangebreaks=[])
 fig_line.update_yaxes(range=[min_y - padding, max_y + padding])
-
 fig_line.update_layout(
     margin=dict(t=40, b=0),
     height=300,
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)"
 )
-fig_line.update_yaxes(range=[3000, max_y + padding])
-
 
 # Treemap
 crime_type_counts = filtered_df["crime type"].value_counts().reset_index()
@@ -147,13 +153,7 @@ if not crime_type_counts.empty:
         path=["Group", "Crime Type"],
         values="Count",
         color="ColorValue",
-        color_continuous_scale=[
-            "#263238",  # dark blue-grey
-    "#455A64",
-    "#607D8B",
-    "#90A4AE",
-    "#CFD8DC"
-        ],
+        color_continuous_scale=["#263238", "#455A64", "#607D8B", "#90A4AE", "#CFD8DC"],
         range_color=[0, 1]
     )
     fig_treemap.update_traces(
@@ -175,7 +175,7 @@ if not crime_type_counts.empty:
 else:
     fig_treemap = None
 
-# Layout 3 columns
+# Layout
 col1, col2, col3 = st.columns([1.5, 4.5, 2], gap='medium')
 
 with col1:
@@ -197,7 +197,6 @@ with col2:
         st.markdown("*No crime type data available for selected filters.*")
 
 with col3:
-    # Crime by City Table
     table_df = district_crime_data[['District', 'Crime Count']].copy()
     st.dataframe(
         table_df,
@@ -214,7 +213,6 @@ with col3:
         }
     )
 
-    # About Box
     with st.expander("About", expanded=True):
          st.markdown("""
     <style>
@@ -273,6 +271,5 @@ with col3:
         </ul>
     </div>
     """, unsafe_allow_html=True)
-
 
 st.plotly_chart(fig_line, use_container_width=True)
