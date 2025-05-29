@@ -5,7 +5,7 @@ def main():
 
     # Heading
     st.markdown("""
-        <h1 style='text-align: center; color: #2c3e50;'>🚓 Gloucestershire Crime Dashboard</h1>
+        <h1 style='text-align: center; color: #63C5DA;'>🚓 Gloucestershire Crime Dashboard</h1>
         <p style='text-align: center; font-size: 18px; color: #cccccc;'>
             Explore crime statistics and trends in Gloucestershire through interactive visualizations.
         </p>
@@ -15,11 +15,11 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         if st.button("📊 Go to Overview"):
-            st.switch_page("pages/1 Overview.py")
+            st.switch_page("pages/1 Dashboard Overview.py")
 
     with col2:
         if st.button("🗺️ Go to Crime Map"):
-            st.switch_page("pages/2 Crime_Map.py")
+            st.switch_page("pages/2 Crime Location Explorer.py")
 
     st.markdown("<br><hr style='border-top: 1px solid #ccc;'>", unsafe_allow_html=True)
     st.info("Use the buttons above to explore crime trends and locations across Gloucestershire.")
