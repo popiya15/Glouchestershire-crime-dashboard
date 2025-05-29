@@ -108,7 +108,6 @@ def create_donut_chart(value, label, color, compare_val=None):
 # Timeline (line chart)
 timeline = filtered_df.groupby(filtered_df['date'].dt.to_period('M')).size().reset_index(name='Crime Count')
 timeline['date'] = timeline['date'].dt.to_timestamp()
-timeline = timeline[timeline['date'] >= pd.to_datetime("2022-02-01")]
 
 min_y = timeline['Crime Count'].min()
 max_y = timeline['Crime Count'].max()
@@ -122,8 +121,8 @@ fig_line = px.line(
     markers=True
 )
 
-fig_line.update_xaxes(range=[pd.to_datetime("2022-01-01"), timeline['date'].max()],rangebreaks=[])
-fig_line.update_yaxes(range=[min_y - padding, max_y + padding])  # หรือใส่ range=[3500, max_y + padding]
+fig_line.update_xaxes(range=[timeline['date'].min(), timeline['date'].max()], rangebreaks=[])
+fig_line.update_yaxes(range=[min_y - padding, max_y + padding])
 
 fig_line.update_layout(
     margin=dict(t=40, b=0),
@@ -247,7 +246,7 @@ with col3:
     }
     .light-desc {
         font-weight: 300;
-        font-size: 12px;  /* 👈 เล็กลงกว่าหัวข้อ */
+        font-size: 12px;
         display: inline-block;
         margin-top: 2px;
     }
